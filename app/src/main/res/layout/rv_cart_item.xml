@@ -31,20 +31,30 @@
                 android:maxLines="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+            <TextView
+                android:padding="10dp"
+                android:textSize="20sp"
+                tools:text="Some description"
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textAlignment="center"
                     android:layout_marginLeft="20dp"
                     android:id="@+id/tv_food_price"
+                    android:textSize="20sp"
+                    android:text="$ "
                     android:maxLines="1"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"/>
                 <Button
                     android:textColor="#FFF"
-                    android:text="Add to"
+                    android:text="Remove"
                     android:drawableRight="@drawable/ic_cart"
                     android:background="#ec5858"
                     android:textStyle="bold"

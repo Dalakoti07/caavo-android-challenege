@@ -1,17 +1,19 @@
 package com.dalakoti07.android.caavoapplication.ui.activities
 
 import android.annotation.SuppressLint
-import android.opengl.Visibility
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.dalakoti07.android.caavoapplication.Application
+import com.dalakoti07.android.caavoapplication.CaavoApplication
 import com.dalakoti07.android.caavoapplication.R
 import com.dalakoti07.android.caavoapplication.network.FoodRecipe
 import com.dalakoti07.android.caavoapplication.ui.adapters.FoodAdapter
+import com.dalakoti07.android.caavoapplication.utils.CartItemCounter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -20,33 +22,42 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvFood:RecyclerView
     private var foodArrayList= ArrayList<FoodRecipe>()
     private lateinit var progressBar: ProgressBar
+    private lateinit var cartItemCounter: CartItemCounter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         rvFood=findViewById(R.id.rv_food)
         progressBar=findViewById(R.id.progress_bar)
-        rvFood.adapter= FoodAdapter(foodArrayList,this)
+        cartItemCounter= CartItemCounter(findViewById(R.id.cart_menu_option))
+        findViewById<ConstraintLayout>(R.id.cart_menu_option).setOnClickListener{
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+        rvFood.adapter= FoodAdapter(foodArrayList,this,{food-> addProductToCart(food)})
         makeAnApiCall()
     }
 
     @SuppressLint("CheckResult")
     private fun makeAnApiCall() {
-        val foodObservable= Application.remoteServiceClient.getFoodRecipe()
+        val foodObservable= CaavoApplication.remoteServiceClient.getFoodRecipe()
         foodObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     progressBar.visibility=View.GONE
                     it?.let {
                         foodArrayList.addAll(it)
-                        for(each:FoodRecipe in it){
-                            Timber.d("${each.name}")
-                        }
                         rvFood.adapter?.notifyDataSetChanged()
                     }
                 },{
                     Timber.d("Got the error "+it.localizedMessage)
                     Toast.makeText(this,"Error: "+it?.localizedMessage,Toast.LENGTH_SHORT).show()
                 })
+    }
+
+    // todo do a delay of 1 second
+    private fun addProductToCart(food:FoodRecipe){
+        Timber.d("food name : ${food.name}")
+        cartItemCounter.increaseCount()
+        CaavoApplication.getInstance().addItemToCart(food)
     }
 }

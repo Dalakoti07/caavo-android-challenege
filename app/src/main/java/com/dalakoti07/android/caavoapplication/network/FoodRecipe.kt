@@ -30,5 +30,7 @@ data class FoodRecipe (
 
     @Expose
     @SerializedName("description")
-    val description: String? = null
+    val description: String? = null,
+
+    val itemCount:Int=0
 )
