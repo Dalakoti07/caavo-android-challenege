@@ -14,7 +14,6 @@ object Networking {
     //    object helps in achieving singleton pattern in android
     private const val NETWORK_CALL_TIMEOUT = 60
     private lateinit var apiClient:ApiService
-    private var localHost="http://192.168.43.220:8000/"
 
     fun create(): ApiService {
         Timber.d("creating new retrofit instance")
