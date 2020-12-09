@@ -14,9 +14,13 @@ import com.dalakoti07.android.caavoapplication.R
 import com.dalakoti07.android.caavoapplication.network.FoodRecipe
 import com.dalakoti07.android.caavoapplication.ui.adapters.FoodAdapter
 import com.dalakoti07.android.caavoapplication.utils.CartItemCounter
+import com.dalakoti07.android.caavoapplication.utils.RxUtils
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var rvFood:RecyclerView
@@ -54,10 +58,26 @@ class MainActivity : AppCompatActivity() {
                 })
     }
 
-    // todo do a delay of 1 second
     private fun addProductToCart(food:FoodRecipe){
         Timber.d("food name : ${food.name}")
         cartItemCounter.increaseCount()
         CaavoApplication.getInstance().addItemToCart(food)
     }
+
+    @SuppressLint("CheckResult")
+    override fun onResume() {
+        super.onResume()
+        RxUtils.getInstance()?.listen()?.subscribe({
+            Timber.d("Got the subscribe value ${it}")
+            changeUI(it)
+        },{
+            Toast.makeText(this,"Rx Java Error",Toast.LENGTH_SHORT).show()
+        })
+    }
+
+    private fun changeUI(value:Int) {
+        cartItemCounter.setText(value)
+        cartItemCounter.setNewCount(value)
+    }
+
 }

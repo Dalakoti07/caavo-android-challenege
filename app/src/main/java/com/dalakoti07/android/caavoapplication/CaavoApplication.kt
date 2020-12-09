@@ -5,6 +5,7 @@ import android.content.Context
 import com.dalakoti07.android.caavoapplication.network.ApiService
 import com.dalakoti07.android.caavoapplication.network.FoodRecipe
 import com.dalakoti07.android.caavoapplication.network.Networking
+import com.dalakoti07.android.caavoapplication.utils.RxUtils
 import timber.log.Timber
 
 class CaavoApplication : Application() {
@@ -41,5 +42,10 @@ class CaavoApplication : Application() {
 
     fun removeItemFromCart(food:FoodRecipe){
         cartItems.remove(food)
+        publishNewCount(cartItems.size)
+    }
+
+    fun publishNewCount(count:Int){
+        RxUtils.getInstance()?.publish(count)
     }
 }

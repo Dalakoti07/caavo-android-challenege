@@ -16,4 +16,12 @@ class CartItemCounter(view: View) {
         count++
         tv_cart_item_count!!.text = count.toString()
     }
+
+    fun setNewCount(newCount:Int){
+        count=newCount
+    }
+
+    fun setText(value:Int){
+        tv_cart_item_count?.text=value.toString()
+    }
 }
