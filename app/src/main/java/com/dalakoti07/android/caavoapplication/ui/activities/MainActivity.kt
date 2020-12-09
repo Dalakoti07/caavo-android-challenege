@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                 })
     }
 
+    // todo simulate api call with .5 second delay
     private fun addProductToCart(food:FoodRecipe){
         Timber.d("food name : ${food.name}")
         cartItemCounter.increaseCount()
